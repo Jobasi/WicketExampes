@@ -1,13 +1,15 @@
 package com.cognizant.entity;
 
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.cognizant.helper.CustomerBuilder;
 
 
 @XmlRootElement(name="customer")
-public class Customer {
+public class Customer implements Serializable{
 	private Long personId;
 	private String firstName;
 	private String lastName;
@@ -55,6 +57,11 @@ public class Customer {
 	}
 	public void setPhoneNumber(Long phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+	
+	public String getFullName() {
+		return String.format("%s, %s ", firstName, lastName);
+		
 	}
 	@Override
 	public String toString() {
