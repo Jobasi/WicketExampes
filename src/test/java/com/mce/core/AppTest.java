@@ -1,4 +1,4 @@
-package com.mkyong.core;
+package com.mce.core;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

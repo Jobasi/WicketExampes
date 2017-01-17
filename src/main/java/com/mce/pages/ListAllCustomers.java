@@ -1,4 +1,4 @@
-package com.mkyong.pages;
+package com.mce.pages;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,12 +18,13 @@ import org.apache.wicket.model.PropertyModel;
 import com.cognizant.entity.Customer;
 import com.cognizant.exceptions.CustomerNotFoundException;
 import com.cognizant.helper.CustomerList;
-import com.mkyong.core.GUIRESTClient;
+import com.mce.core.GUIRESTClient;
 
 public class ListAllCustomers extends WebPage {
 	
 	
-	 public ListAllCustomers(final PageParameters parameters) throws CustomerNotFoundException, IOException {
+	 @SuppressWarnings({ "serial", "rawtypes" })
+	public ListAllCustomers(final PageParameters parameters) throws CustomerNotFoundException, IOException {
 	    	Customer badCustomer = new Customer();
 	    	badCustomer.setPersonId(99L);
 	    	badCustomer.setFirstName("Bad");

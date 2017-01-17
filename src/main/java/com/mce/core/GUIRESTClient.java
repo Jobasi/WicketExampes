@@ -1,19 +1,24 @@
-package com.mkyong.core;
+package com.mce.core;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import com.cognizant.entity.Customer;
 import com.cognizant.exceptions.CustomerNotFoundException;
+import com.cognizant.exceptions.CustomerNotSavedException;
 import com.cognizant.helper.CustomerList;
 
 public class GUIRESTClient {
@@ -29,6 +34,7 @@ private final String baseUrl = "http://localhost:8080/server/api/customer";
 		return httpConnection;
 	}
 	
+	@SuppressWarnings("unused")
 	private HttpURLConnection makeRestCall(String path, String method, String email) throws IOException  {
 		URL url = new URL(String.format("%s/%s/%s", baseUrl, path, email));
 		System.out.println("Server Uri:  " + url.toString() + " was Triggred");
@@ -100,6 +106,47 @@ private final String baseUrl = "http://localhost:8080/server/api/customer";
 
 			StringReader reader = new StringReader(xmlString);
 			customer = (CustomerList) unmarshaller.unmarshal(reader);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return customer;
+	}
+	
+	public Customer createCustomer(Customer customer) throws CustomerNotSavedException {
+		//Customer customerOne = new Customer();
+		BufferedReader bufferedReader = null;
+		try {
+			HttpURLConnection conn = makeRestCall("create", "POST");
+			
+		    StringWriter stringWriter = new StringWriter();
+		    JAXBContext jaxbContext = JAXBContext.newInstance(Customer.class);
+		    Marshaller marshaller = jaxbContext.createMarshaller();
+		    marshaller.marshal(customer, stringWriter);
+		    String xmlString = stringWriter.toString();
+		   
+		    OutputStream output = new BufferedOutputStream(conn.getOutputStream());
+		    output.write(xmlString.getBytes());
+		    output.flush();
+		    
+		    bufferedReader = new BufferedReader(new InputStreamReader(
+					(conn.getInputStream())));
+			
+			String xmlStringResponse = bufferedReader.readLine();  
+			
+			JAXBContext jaxbContextResponse = JAXBContext.newInstance(Customer.class);
+			Unmarshaller unmarshaller = jaxbContextResponse.createUnmarshaller();
+
+			StringReader reader = new StringReader(xmlStringResponse);
+			 customer = (Customer) unmarshaller.unmarshal(reader);	
+		    
+		    
+		    conn.disconnect();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,9 +1,9 @@
-package com.mkyong;
+package com.mce;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 
-import com.mkyong.pages.Home;
+import com.mce.pages.Home;
 
 public class MyApplication extends WebApplication {
 
